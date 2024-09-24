@@ -1,0 +1,3 @@
+# omniscient
+
+Omniscient Flutter project.
