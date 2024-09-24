@@ -9,6 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  get: ^4.6.1       # Get 패키지 추가 (네비게이션 및 상태 관리)
+  flutter_svg: ^1.0.3   # SVG 이미지 로드용 플러그인
+  url_launcher: ^6.0.20
+
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +21,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # 프로젝트에 사용할 assets 경로를 정의
+  assets:
+    - assets/images/omniscientLogo.png  # 로고 이미지 경로
