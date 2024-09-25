@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // 네비게이션 및 상태 관리를 위한 패키지
 
 class Header extends StatelessWidget {
+  const Header({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -102,8 +104,7 @@ class Header extends StatelessWidget {
   Widget _buildMenuItem(BuildContext context, String title, String route) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(route); // 페이지로 이동
-        Navigator.of(context).pop(); // 다이얼로그 닫기
+        Get.offNamed(route); // Get.toNamed 대신 Get.offNamed 사용
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
