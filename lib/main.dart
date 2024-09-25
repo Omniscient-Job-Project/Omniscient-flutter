@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'core/widgets/header.dart';  // Header 파일 가져오기
 import 'core/widgets/footer.dart';  // Footer 파일 가져오기
 import 'package:get/get.dart';  // GetX를 사용한 라우팅 처리
+import 'features/employment/screens/job_main_page.dart';
 
 void main() {
   runApp(MainApp());
@@ -10,9 +11,14 @@ void main() {
 class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(  // GetMaterialApp을 사용하여 GetX 라우팅을 지원
-      debugShowCheckedModeBanner: false,  // 여기서 디버그 태그를 숨김
-      home: MainPage(),  // 메인 페이지로 이동
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      defaultTransition: Transition.fade, // 페이지 전환 애니메이션 추가
+      getPages: [
+        GetPage(name: '/', page: () => MainPage()),
+        GetPage(name: '/curation', page: () => const JobMainPage()),
+      ],
     );
   }
 }
