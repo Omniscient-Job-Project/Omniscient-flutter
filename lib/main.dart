@@ -3,6 +3,8 @@ import 'core/widgets/header.dart';  // Header 파일 가져오기
 import 'core/widgets/footer.dart';  // Footer 파일 가져오기
 import 'package:get/get.dart';  // GetX를 사용한 라우팅 처리
 import 'features/employment/screens/job_main_page.dart';
+import 'features/certificate/screens/certificateInfoPage.dart';  // 자격증 정보 페이지 임포트
+
 
 void main() {
   runApp(MainApp());
@@ -18,11 +20,28 @@ class MainApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/', page: () => MainPage()),
         GetPage(name: '/curation', page: () => const JobMainPage()),
+        GetPage(name: '/certificateInfoPage', page: () => CertificateInfoPage()),  // 자격증 정보 페이지 등록
       ],
     );
   }
 }
 
+class MenuPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Menu Page')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Get.toNamed('/certificateInfoPage');  // 자격증 정보 페이지로 이동
+          },
+          child: Text('자격증 정보로 이동'),
+        ),
+      ),
+    );
+  }
+}
 class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
