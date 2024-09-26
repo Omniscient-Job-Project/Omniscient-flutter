@@ -13,6 +13,10 @@ dependencies:
   flutter_svg: ^1.0.3   # SVG 이미지 로드용 플러그인
   url_launcher: ^6.0.20
   dio: ^5.0.0
+  font_awesome_flutter: ^10.1.0  # 사용 가능한 최신 버전으로 설정
+  http: ^0.13.3
+  intl: ^0.17.0  # intl 패키지 추가
+  flutter_dotenv: ^5.0.2
 
 
 dev_dependencies:
@@ -26,3 +30,4 @@ flutter:
   # 프로젝트에 사용할 assets 경로를 정의
   assets:
     - assets/images/omniscientLogo.png  # 로고 이미지 경로
+    - assets/.env

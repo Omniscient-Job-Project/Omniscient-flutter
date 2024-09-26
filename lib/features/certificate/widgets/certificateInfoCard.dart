@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
-import '../models/certificateInfo.dart';  // CertificateInfo 모델 임포트
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../models/certificateInfo.dart';
+import 'package:intl/intl.dart';  // intl 패키지 임포트
 
 class CertificateInfoCard extends StatelessWidget {
-  final CertificateInfo certificate;  // CertificateInfo 모델 사용
+  final CertificateInfo certificate;
 
   const CertificateInfoCard({Key? key, required this.certificate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final numberFormat = NumberFormat('#,###');  // NumberFormat 인스턴스 생성
+    final titleStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+    final contentStyle = TextStyle(fontSize: 16);
+
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -16,18 +22,87 @@ class CertificateInfoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              certificate.jmNm,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            // 자격증 이름
+            Row(
+              children: [
+                FaIcon(FontAwesomeIcons.certificate, color: Colors.green),
+                SizedBox(width: 8),
+                Text(
+                  certificate.jmNm,
+                  style: titleStyle,
+                ),
+              ],
             ),
             SizedBox(height: 8),
-            Text('기관: ${certificate.instiNm}'),
-            Text('등급: ${certificate.grdNm}'),
-            Text('자격증 취득률: ${certificate.preyyAcquQualIncRate}%'),
-            Text('전년도 자격증 취득 수: ${certificate.preyyQualAcquCnt}'),
-            Text('총 자격증 취득 수: ${certificate.qualAcquCnt}'),
-            Text('통계 연도: ${certificate.statisYy}'),
-            Text('합계 연도: ${certificate.sumYy}'),
+
+            // 기관 이름
+            Row(
+              children: [
+                FaIcon(FontAwesomeIcons.building, color: Colors.blue),
+                SizedBox(width: 8),
+                Text('기관: ${certificate.instiNm}', style: contentStyle),
+              ],
+            ),
+
+            // 등급
+            Row(
+              children: [
+                FaIcon(FontAwesomeIcons.trophy, color: Colors.orange),
+                SizedBox(width: 8),
+                Text('등급: ${certificate.grdNm}', style: contentStyle),
+              ],
+            ),
+
+            // 자격증 취득률
+            Row(
+              children: [
+                FaIcon(FontAwesomeIcons.chartLine, color: Colors.purple),
+                SizedBox(width: 8),
+                Text('자격증 취득률: ${certificate.preyyAcquQualIncRate.toStringAsFixed(2)}%', style: contentStyle),
+              ],
+            ),
+
+            // 전년도 자격증 취득 수
+            Row(
+              children: [
+                FaIcon(FontAwesomeIcons.chartBar, color: Colors.indigo),
+                SizedBox(width: 8),
+                Text(
+                  '전년도 자격증 취득 수: ${numberFormat.format(certificate.preyyQualAcquCnt)}',
+                  style: contentStyle,
+                ),
+              ],
+            ),
+
+            // 총 자격증 취득 수
+            Row(
+              children: [
+                FaIcon(FontAwesomeIcons.chartPie, color: Colors.red),
+                SizedBox(width: 8),
+                Text(
+                  '총 자격증 취득 수: ${numberFormat.format(certificate.qualAcquCnt)}',
+                  style: contentStyle,
+                ),
+              ],
+            ),
+
+            // 통계 연도
+            Row(
+              children: [
+                FaIcon(FontAwesomeIcons.calendarAlt, color: Colors.teal),
+                SizedBox(width: 8),
+                Text('통계 연도: ${certificate.statisYy.toString()}', style: contentStyle),
+              ],
+            ),
+
+// 합계 연도
+            Row(
+              children: [
+                FaIcon(FontAwesomeIcons.calendarCheck, color: Colors.lightGreen),
+                SizedBox(width: 8),
+                Text('합계 연도: ${certificate.sumYy.toString()}', style: contentStyle),
+              ],
+            ),
           ],
         ),
       ),
