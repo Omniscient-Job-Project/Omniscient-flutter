@@ -26,7 +26,7 @@ class Header extends StatelessWidget {
           // 로고 (가운데)
           GestureDetector(
             onTap: () {
-              Get.toNamed('/'); // 라우팅 처리
+              Get.offNamed('/'); // 라우팅 처리
             },
             child: Image.asset(
               'assets/images/omniscientLogo.png', // 로고 이미지 경로
@@ -87,7 +87,7 @@ class Header extends StatelessWidget {
                     children: [
                       _buildMenuItem(context, '자격증', '/certificate'),
                       _buildSubMenuItem(context, '자격증 정보', '/certificateInfoPage'),  // 자격증 정보 페이지로 이동
-                      _buildSubMenuItem(context, '시험 일정', '/certificateSchedule'),
+                      _buildSubMenuItem(context, '시험 일정', '/test_jobs_screen'),
                       _buildMenuItem(context, '채용', '/curation'),
                       _buildMenuItem(context, '자유게시판', '/board'),
                       _buildMenuItem(context, '마이페이지', '/mypage'),
@@ -106,8 +106,8 @@ class Header extends StatelessWidget {
   Widget _buildMenuItem(BuildContext context, String title, String route) {
     return GestureDetector(
       onTap: () {
+        Navigator.of(context).pop();  // 다이얼로그 닫기 먼저 호출
         Get.toNamed(route);  // 페이지로 이동
-        Navigator.of(context).pop();  // 다이얼로그 닫기
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -122,8 +122,8 @@ class Header extends StatelessWidget {
   Widget _buildSubMenuItem(BuildContext context, String title, String route) {
     return GestureDetector(
       onTap: () {
+        Navigator.of(context).pop();  // 다이얼로그 닫기 먼저 호출
         Get.toNamed(route);  // 자격증 정보 페이지로 이동
-        Navigator.of(context).pop();  // 다이얼로그 닫기
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 30.0, top: 5.0, bottom: 5.0),
@@ -134,7 +134,6 @@ class Header extends StatelessWidget {
       ),
     );
   }
-}
 
   // 인증 처리 함수
   void _handleAuth(BuildContext context) {
@@ -164,3 +163,4 @@ class Header extends StatelessWidget {
       },
     );
   }
+}
