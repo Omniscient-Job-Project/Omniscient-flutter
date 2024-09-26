@@ -1,4 +1,3 @@
-// core/services/api_service.dart
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart'; // dotenv 패키지 임포트
@@ -27,25 +26,21 @@ class ApiService {
   }
 
   // fetchTestJobs 메서드를 ApiService 클래스 내부로 이동
-  Future<List<TestJob>> fetchTestJobs() async {
+  Future<List<TestJob>> fetchTestJobs({int numOfRows = 100}) async {
+    // 기본적으로 100개의 항목 요청
     try {
-      final response = await _dio.get('/api/v1/testjob');
+      final response = await _dio.get(
+        '/api/v1/testjob',
+        queryParameters: {
+          'numOfRows': numOfRows,  // 한 번에 불러올 데이터 개수 설정
+        },
+      );
 
       if (response.statusCode == 200) {
         // responseType이 ResponseType.plain이므로, response.data는 String 타입입니다.
         final Map<String, dynamic> data = jsonDecode(response.data);
 
         // API 응답 데이터 구조에 따라 접근 경로 수정
-        // 예시 응답 구조:
-        // {
-        //   "response": {
-        //     "body": {
-        //       "items": {
-        //         "item": [ ... ]
-        //       }
-        //     }
-        //   }
-        // }
         var itemsData = data['response']?['body']?['items']?['item'];
 
         List<TestJob> testJobs = [];

@@ -1,3 +1,4 @@
+// features/certificate/widgets/certificate_info_card.dart
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../models/certificateInfo.dart';
@@ -17,6 +18,7 @@ class CertificateInfoCard extends StatelessWidget {
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -27,9 +29,11 @@ class CertificateInfoCard extends StatelessWidget {
               children: [
                 FaIcon(FontAwesomeIcons.certificate, color: Colors.green),
                 SizedBox(width: 8),
-                Text(
-                  certificate.jmNm,
-                  style: titleStyle,
+                Expanded(
+                  child: Text(
+                    certificate.jmNm,
+                    style: titleStyle,
+                  ),
                 ),
               ],
             ),
@@ -40,7 +44,9 @@ class CertificateInfoCard extends StatelessWidget {
               children: [
                 FaIcon(FontAwesomeIcons.building, color: Colors.blue),
                 SizedBox(width: 8),
-                Text('기관: ${certificate.instiNm}', style: contentStyle),
+                Expanded(
+                  child: Text('기관: ${certificate.instiNm}', style: contentStyle),
+                ),
               ],
             ),
 
@@ -49,7 +55,9 @@ class CertificateInfoCard extends StatelessWidget {
               children: [
                 FaIcon(FontAwesomeIcons.trophy, color: Colors.orange),
                 SizedBox(width: 8),
-                Text('등급: ${certificate.grdNm}', style: contentStyle),
+                Expanded(
+                  child: Text('등급: ${certificate.grdNm}', style: contentStyle),
+                ),
               ],
             ),
 
@@ -58,7 +66,9 @@ class CertificateInfoCard extends StatelessWidget {
               children: [
                 FaIcon(FontAwesomeIcons.chartLine, color: Colors.purple),
                 SizedBox(width: 8),
-                Text('자격증 취득률: ${certificate.preyyAcquQualIncRate.toStringAsFixed(2)}%', style: contentStyle),
+                Expanded(
+                  child: Text('자격증 취득률: ${certificate.preyyAcquQualIncRate.toStringAsFixed(2)}%', style: contentStyle),
+                ),
               ],
             ),
 
@@ -67,9 +77,11 @@ class CertificateInfoCard extends StatelessWidget {
               children: [
                 FaIcon(FontAwesomeIcons.chartBar, color: Colors.indigo),
                 SizedBox(width: 8),
-                Text(
-                  '전년도 자격증 취득 수: ${numberFormat.format(certificate.preyyQualAcquCnt)}',
-                  style: contentStyle,
+                Expanded(
+                  child: Text(
+                    '전년도 자격증 취득 수: ${numberFormat.format(certificate.preyyQualAcquCnt)}',
+                    style: contentStyle,
+                  ),
                 ),
               ],
             ),
@@ -79,9 +91,11 @@ class CertificateInfoCard extends StatelessWidget {
               children: [
                 FaIcon(FontAwesomeIcons.chartPie, color: Colors.red),
                 SizedBox(width: 8),
-                Text(
-                  '총 자격증 취득 수: ${numberFormat.format(certificate.qualAcquCnt)}',
-                  style: contentStyle,
+                Expanded(
+                  child: Text(
+                    '총 자격증 취득 수: ${numberFormat.format(certificate.qualAcquCnt)}',
+                    style: contentStyle,
+                  ),
                 ),
               ],
             ),
@@ -91,16 +105,20 @@ class CertificateInfoCard extends StatelessWidget {
               children: [
                 FaIcon(FontAwesomeIcons.calendarAlt, color: Colors.teal),
                 SizedBox(width: 8),
-                Text('통계 연도: ${certificate.statisYy.toString()}', style: contentStyle),
+                Expanded(
+                  child: Text('통계 연도: ${certificate.statisYy}', style: contentStyle),
+                ),
               ],
             ),
 
-// 합계 연도
+            // 합계 연도
             Row(
               children: [
                 FaIcon(FontAwesomeIcons.calendarCheck, color: Colors.lightGreen),
                 SizedBox(width: 8),
-                Text('합계 연도: ${certificate.sumYy.toString()}', style: contentStyle),
+                Expanded(
+                  child: Text('합계 연도: ${certificate.sumYy}', style: contentStyle),
+                ),
               ],
             ),
           ],

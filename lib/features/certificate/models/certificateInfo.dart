@@ -1,3 +1,4 @@
+// features/certificate/models/certificate_info.dart
 class CertificateInfo {
   final String jmNm; // 자격증 이름
   final String instiNm; // 기관 이름
@@ -5,8 +6,8 @@ class CertificateInfo {
   final double preyyAcquQualIncRate; // 자격증 취득률
   final int preyyQualAcquCnt; // 전년도 자격증 취득 수
   final int qualAcquCnt; // 총 자격증 취득 수
-  final int statisYy; // 통계 연도 (int로 변경)
-  final int sumYy; // 합계 연도 (int로 변경)
+  final int statisYy; // 통계 연도
+  final int sumYy; // 합계 연도
 
   CertificateInfo({
     required this.jmNm,
