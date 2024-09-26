@@ -1,3 +1,4 @@
+// features/certificate/repositories/certificate_info_repository.dart
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../models/certificateInfo.dart';
@@ -16,11 +17,22 @@ class CertificateInfoRepository {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.data);
 
-        List<dynamic> items = data['response']['body']['items']['item'];
+        // 응답 데이터 구조에 따라 접근 경로 수정
+        var itemsData = data['response']?['body']?['items']?['item'];
 
-        return items
-            .map((item) => CertificateInfo.fromJson(item))
-            .toList();
+        List<CertificateInfo> certificates = [];
+
+        if (itemsData != null) {
+          if (itemsData is List) {
+            // itemsData가 리스트인 경우
+            certificates = itemsData.map((item) => CertificateInfo.fromJson(item)).toList();
+          } else if (itemsData is Map<String, dynamic>) {
+            // itemsData가 단일 객체인 경우
+            certificates = [CertificateInfo.fromJson(itemsData)];
+          }
+        }
+
+        return certificates;
       } else {
         throw Exception('Failed to load certificates');
       }
