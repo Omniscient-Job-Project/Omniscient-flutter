@@ -4,30 +4,31 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: ^3.5.0
+  sdk: '>=3.5.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  get: ^4.6.1       # Get 패키지 추가 (네비게이션 및 상태 관리)
-  flutter_svg: ^1.0.3   # SVG 이미지 로드용 플러그인
-  url_launcher: ^6.0.20
-  dio: ^5.0.0
-  font_awesome_flutter: ^10.1.0  # 사용 가능한 최신 버전으로 설정
-  http: ^0.13.3
-  intl: ^0.17.0  # intl 패키지 추가
-  flutter_dotenv: ^5.0.2
-
+  shared_preferences: ^2.2.2
+  get: ^4.6.6
+  flutter_svg: ^2.0.9
+  url_launcher: ^6.2.1
+  dio: ^5.3.3
+  font_awesome_flutter: ^10.6.0
+  http: ^1.1.0
+  intl: ^0.18.1
+  flutter_dotenv: ^5.1.0
+  cupertino_icons: ^1.0.6
+  provider: ^6.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^3.0.1
 
 flutter:
   uses-material-design: true
 
-  # 프로젝트에 사용할 assets 경로를 정의
   assets:
-    - assets/images/omniscientLogo.png  # 로고 이미지 경로
+    - assets/images/omniscientLogo.png
     - assets/.env
