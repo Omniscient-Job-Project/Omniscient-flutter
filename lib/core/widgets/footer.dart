@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart'; // 외부 링크를 위한 패키지
 
 class Footer extends StatelessWidget {
   const Footer({Key? key}) : super(key: key);
@@ -20,50 +19,32 @@ class Footer extends StatelessWidget {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 균등하게 요소 배치
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/notice'); // 공지사항 페이지로 이동
+              Navigator.pushNamed(context, '/certificateInfoPage'); // 자격증 페이지로 이동
             },
             child: Text(
-              '공지사항',
+              '자격증',
               style: footerLinkStyle(),
             ),
           ),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/terms'); // 이용약관 페이지로 이동
+              Navigator.pushNamed(context, '/'); // 홈 페이지로 이동
             },
             child: Text(
-              '이용약관',
+              '홈',
               style: footerLinkStyle(),
             ),
           ),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/noticeFAQ'); // FAQ 페이지로 이동
+              Navigator.pushNamed(context, '/curation'); // 채용 페이지로 이동
             },
             child: Text(
-              '자주 묻는 질문(FAQ)',
-              style: footerLinkStyle(),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              _launchURL('https://github.com/Omniscient-Job-Project'); // 외부 링크 열기
-            },
-            child: Text(
-              '깃허브',
-              style: footerLinkStyle(),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, '/login'); // 전직시 페이지로 이동
-            },
-            child: Text(
-              '전직시',
+              '채용',
               style: footerLinkStyle(),
             ),
           ),
@@ -78,14 +59,5 @@ class Footer extends StatelessWidget {
       decoration: TextDecoration.none, // 기본 밑줄 없음
       color: Colors.black, // 기본 글자 색상
     );
-  }
-
-  // 외부 URL을 열기 위한 함수
-  void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }
