@@ -25,6 +25,9 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/curation', page: () => const JobMainPage()),
         GetPage(name: '/certificateInfoPage', page: () => CertificateInfoPage()),  // 자격증 정보 페이지 등록
         GetPage(name: '/test_jobs_screen', page: () => TestJobsScreen()),  // 시험 일정 페이지 등록
+        GetPage(name: '/notice', page: () => MainPage()),  // 시험 일정 페이지 등록
+        GetPage(name: '/faq', page: () => MainPage()),  // 시험 일정 페이지 등록
+        GetPage(name: '/terms', page: () => MainPage()),  // 시험 일정 페이지 등록
       ],
     );
   }
