@@ -1,4 +1,3 @@
-// features/certificate/screens/certificate_info_page.dart
 import 'package:flutter/material.dart';
 import '/core/widgets/header.dart';  // Header 파일 가져오기
 import '/core/widgets/footer.dart';  // Footer 파일 가져오기
@@ -18,7 +17,7 @@ class _CertificateInfoPageState extends State<CertificateInfoPage> {
   List<CertificateInfo> _displayedCertificates = []; // 현재 페이지에 표시되는 자격증 정보
 
   int _currentPage = 1;
-  final int _itemsPerPage = 5;
+  final int _itemsPerPage = 5; // 한 페이지에 표시할 항목 수
   String _searchKeyword = '';
 
   final TextEditingController _searchController = TextEditingController();
@@ -73,8 +72,14 @@ class _CertificateInfoPageState extends State<CertificateInfoPage> {
     }
 
     // 현재 페이지에 맞는 데이터 추출
+    _applyPagination();
+  }
+
+  // 페이지네이션 적용
+  void _applyPagination() {
     int startIndex = (_currentPage - 1) * _itemsPerPage;
     int endIndex = startIndex + _itemsPerPage;
+
     if (startIndex > _filteredCertificates.length) {
       startIndex = 0;
       _currentPage = 1;
@@ -82,7 +87,10 @@ class _CertificateInfoPageState extends State<CertificateInfoPage> {
     if (endIndex > _filteredCertificates.length) {
       endIndex = _filteredCertificates.length;
     }
-    _displayedCertificates = _filteredCertificates.sublist(startIndex, endIndex);
+
+    setState(() {
+      _displayedCertificates = _filteredCertificates.sublist(startIndex, endIndex);
+    });
   }
 
   // 검색어가 변경될 때마다 필터링 및 페이지네이션 적용
@@ -96,10 +104,13 @@ class _CertificateInfoPageState extends State<CertificateInfoPage> {
 
   // 페이지를 변경할 때마다 표시되는 데이터를 업데이트
   void _changePage(int page) {
-    setState(() {
-      _currentPage = page;
-      _applyFilterAndPagination();
-    });
+    int totalPages = (_filteredCertificates.length / _itemsPerPage).ceil();
+    if (page >= 1 && page <= totalPages) {
+      setState(() {
+        _currentPage = page;
+        _applyPagination();
+      });
+    }
   }
 
   @override
@@ -155,7 +166,7 @@ class _CertificateInfoPageState extends State<CertificateInfoPage> {
     );
   }
 
-  // 페이지네이션 위젯 생성
+  // 페이지네이션 UI 생성
   Widget _buildPagination(int totalPages) {
     if (totalPages <= 1) return SizedBox.shrink(); // 페이지가 1개 이하이면 표시하지 않음
 
