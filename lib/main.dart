@@ -3,11 +3,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';  // dotenv 패키지 임포
 import 'core/widgets/header.dart';  // Header 파일 가져오기
 import 'core/widgets/footer.dart';  // Footer 파일 가져오기
 import 'package:get/get.dart';  // GetX를 사용한 라우팅 처리
+import 'core/widgets/sidebar_}layout.dart';
 import 'features/employment/screens/job_main_page.dart';
 import 'features/certificate/screens/certificateInfoPage.dart';  // 자격증 정보 페이지 임포트
 import 'features/certificate/screens/test_jobs_screen.dart';  // 시험 일정 페이지 임포트
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
+import 'features/mypage/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,9 +33,17 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/curation', page: () => const JobMainPage()),
         GetPage(name: '/certificateInfoPage', page: () => CertificateInfoPage()),  // 자격증 정보 페이지 등록
         GetPage(name: '/test_jobs_screen', page: () => TestJobsScreen()),  // 시험 일정 페이지 등록
-        GetPage(name: '/notice', page: () => MainPage()),  // 시험 일정 페이지 등록
-        GetPage(name: '/faq', page: () => MainPage()),  // 시험 일정 페이지 등록
-        GetPage(name: '/terms', page: () => MainPage()),  // 시험 일정 페이지 등록
+        // GetPage(name: '/notice', page: () => Notice()),
+        // GetPage(name: '/faq', page: () => FAQ()),
+        // GetPage(name: '/terms', page: () => terms()),
+        // 마이페이지 관련 라우팅
+        GetPage(name: '/home_screen', page: () => SidebarLayout(child: HomeScreen())),
+        // GetPage(name: '/mypage/screen/profile_page', page: () => SidebarLayout(child: ProfilePage())),
+        // GetPage(name: '/mypage/screen/resume_page', page: () => SidebarLayout(child: ResumePage())),
+        // GetPage(name: '/mypage/screens/applications_page', page: () => SidebarLayout(child: ApplicationsPage())),
+        // GetPage(name: '/mypage/screens/scrap_page', page: () => SidebarLayout(child: ScrapPage())),
+        // GetPage(name: '/mypage/screens/certificates_page', page: () => SidebarLayout(child: CertificatesPage())),
+        // GetPage(name: '/mypage/screens/withdrawal_page', page: () => SidebarLayout(child: WithdrawalPage())),
       ],
     );
   }
@@ -59,6 +69,12 @@ class MenuPage extends StatelessWidget {
                 Get.toNamed('/test_jobs_screen');  // 시험 일정 페이지로 이동
               },
               child: const Text('시험 일정으로 이동'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.toNamed('/mypage/screens/home_screen'); // 마이페이지로 이동 (사이드바가 있는 페이지)
+              },
+              child: const Text('마이페이지로 이동'),
             ),
           ],
         ),
