@@ -6,10 +6,14 @@ import 'package:get/get.dart';  // GetX를 사용한 라우팅 처리
 import 'features/employment/screens/job_main_page.dart';
 import 'features/certificate/screens/certificateInfoPage.dart';  // 자격증 정보 페이지 임포트
 import 'features/certificate/screens/test_jobs_screen.dart';  // 시험 일정 페이지 임포트
+import 'features/auth/screens/login_screen.dart';
+import 'features/auth/screens/register_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: 'assets/.env'); // 경로 수정
+  await dotenv.load(fileName: 'assets/.env');
+  var apiUrl = dotenv.env['API_URL'] ?? 'http://localhost:8080';
+  print('API URL: $apiUrl'); // API URL 로그 출력
   runApp(MainApp());
 }
 
@@ -18,9 +22,11 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',  // 초기 경로 설정
+      initialRoute: '/login',
       defaultTransition: Transition.fade,  // 페이지 전환 애니메이션 추가
       getPages: [
+        GetPage(name: '/login', page: () => LoginScreen()),
+        GetPage(name: '/register', page: () => RegisterScreen()),
         GetPage(name: '/', page: () => MainPage()),
         GetPage(name: '/curation', page: () => const JobMainPage()),
         GetPage(name: '/certificateInfoPage', page: () => CertificateInfoPage()),  // 자격증 정보 페이지 등록
