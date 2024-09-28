@@ -10,6 +10,7 @@ import 'features/certificate/screens/test_jobs_screen.dart';  // 시험 일정 �
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
 import 'features/mypage/screens/home_screen.dart';
+import 'features/term/screens/terms_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,7 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/test_jobs_screen', page: () => TestJobsScreen()),  // 시험 일정 페이지 등록
         // GetPage(name: '/notice', page: () => Notice()),
         // GetPage(name: '/faq', page: () => FAQ()),
-        // GetPage(name: '/terms', page: () => terms()),
+        GetPage(name: '/terms', page: () => TermsScreen()),
         // 마이페이지 관련 라우팅
         GetPage(name: '/home_screen', page: () => SidebarLayout(child: HomeScreen())),
         // GetPage(name: '/mypage/screen/profile_page', page: () => SidebarLayout(child: ProfilePage())),
@@ -75,6 +76,12 @@ class MenuPage extends StatelessWidget {
                 Get.toNamed('/mypage/screens/home_screen'); // 마이페이지로 이동 (사이드바가 있는 페이지)
               },
               child: const Text('마이페이지로 이동'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.toNamed('/TermsScreen');  // TermsScreen으로 이동
+              },
+              child: const Text('이용 약관 페이지로 이동'),
             ),
           ],
         ),
