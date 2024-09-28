@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart'; // dotenv 패키지 임포트
 import '../../features/employment/models/job.dart';
 
-class ApiService {
+class ApiJobService {
   final Dio _dio = Dio(BaseOptions(
     baseUrl: dotenv.env['API_URL'] ?? 'http://default.url',
     responseType: ResponseType.plain,
