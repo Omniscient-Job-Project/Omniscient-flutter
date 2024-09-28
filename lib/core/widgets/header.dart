@@ -35,18 +35,6 @@ class Header extends StatelessWidget {
               fit: BoxFit.contain,
             ),
           ),
-
-          // 로그인 버튼 (오른쪽)
-          GestureDetector(
-            onTap: () => _handleAuth(context),
-            child: Text(
-              '로그인', // 로그인/로그아웃 버튼
-              style: TextStyle(
-                fontSize: 16,  // 폰트 크기
-                color: Colors.black,
-              ),
-            ),
-          ),
         ],
       ),
     );

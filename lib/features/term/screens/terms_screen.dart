@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/widgets/footer.dart';
+import '../../../core/widgets/header.dart';
 import '../models/term_section.dart';
 import '../widgets/term_section_widget.dart';
 
@@ -35,8 +37,12 @@ class TermsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80.0),
+        child: Header(), // 헤더 추가
+      ),
       body: Container(
-        color: Color(0xFFE6F3FF),
+        color: const Color(0xFFE6F3FF),
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
@@ -75,6 +81,7 @@ class TermsScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: const Footer(), // 푸터 추가
     );
   }
 }
