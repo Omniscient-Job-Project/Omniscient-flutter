@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import '../../../core/services/api_employ_service.dart';
+import '../../../core/services/api_job_service.dart';
 import '../models/job.dart';
 
 class JobRepository {
-  final ApiService apiService;
+  final ApiJobService apiService;
 
   // 생성자에서 ApiService를 주입받음
   JobRepository(this.apiService);

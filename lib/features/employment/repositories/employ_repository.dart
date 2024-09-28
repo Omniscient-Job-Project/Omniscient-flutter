@@ -1,52 +1,52 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart'; // 환경변수 사용
+
+import '../../../core/services/api_employ_service.dart';
 import '../models/employment.dart';
 
 class EmployRepository {
-  final Dio _dio = Dio(BaseOptions(
-    baseUrl: dotenv.env['API_URL'] ?? 'http://default.url', // 환경변수에서 API_URL 로드
-    responseType: ResponseType.plain,
-  ));
+  final ApiEmployService apiService;
 
-  // 채용 정보 가져오기
-  Future<List<Employment>> fetchEmployment(String category) async {
+  // 생성자에서 ApiEmployService를 주입받음
+  EmployRepository(this.apiService);
+
+  // 채용 정보를 모두 가져오는 메서드
+  Future<List<Employment>> getEmployments({int numOfRows = 100}) async {
     try {
-      final response = await _dio.get(
-        '/employment',
-        queryParameters: {
-          'category': category, // 카테고리로 필터링
-        },
-      );
+      final response = await apiService.getRequest('/api/v1/employment?numOfRows=$numOfRows');
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.data); // response.data는 String이므로 jsonDecode
-        final List<dynamic> employmentList = data['data']; // 'data' 키에서 리스트 추출
-        return employmentList.map((json) => Employment.fromJson(json)).toList(); // Employment 모델로 변환
+      // 받아온 원본 데이터를 출력해봅니다.
+      print('Response data: ${response.data}');
+
+      // 받아온 데이터를 JSON으로 변환
+      final Map<String, dynamic> jsonData = jsonDecode(response.data);
+
+      // 'GGEMPLTSP' 필드가 존재하고 그 안에 'row' 리스트가 있을 경우 처리
+      if (jsonData.containsKey('GGEMPLTSP') && jsonData['GGEMPLTSP']['row'] is List) {
+        final List<dynamic> employmentData = jsonData['GGEMPLTSP']['row']; // 'row' 리스트 추출
+        return employmentData.map((employmentJson) => Employment.fromJson(employmentJson)).toList();
       } else {
-        throw Exception('Failed to load employment data');
+        throw Exception('Invalid employment data format');
       }
     } catch (e) {
-      throw Exception('Error fetching employment data: $e');
+      throw Exception('Failed to load employment data: $e');
     }
   }
 
   // 검색으로 채용 정보 찾기
   Future<List<Employment>> searchJobs(String query) async {
     try {
-      final response = await _dio.get(
-        '/employment/search',
-        queryParameters: {
-          'query': query, // 검색어로 필터링
-        },
-      );
+      final response = await apiService.getRequest('/api/v1/employment/search?query=$query');
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.data);
-        final List<dynamic> employmentList = data['data'];
-        return employmentList.map((json) => Employment.fromJson(json)).toList();
+      // 받아온 원본 데이터를 출력해봅니다.
+      print('Search response data: ${response.data}');
+
+      final Map<String, dynamic> jsonData = jsonDecode(response.data);
+
+      if (jsonData.containsKey('data') && jsonData['data'] is List) {
+        final List<dynamic> employmentList = jsonData['data']; // 'data' 리스트 추출
+        return employmentList.map((employmentJson) => Employment.fromJson(employmentJson)).toList();
       } else {
-        throw Exception('Failed to search employment data');
+        throw Exception('Invalid search data format');
       }
     } catch (e) {
       throw Exception('Error searching employment data: $e');
