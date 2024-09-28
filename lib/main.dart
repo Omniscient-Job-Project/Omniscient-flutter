@@ -16,6 +16,9 @@ import 'features/mypage/screens/resume_page.dart';
 import 'features/mypage/screens/applications_page.dart';
 import 'features/mypage/screens/certificates_page.dart';
 import 'features/mypage/screens/withdrawal_page.dart';
+import 'features/notice/screens/notice_screen.dart';
+import 'features/faq/screens/faq_screen.dart';
+
 
 
 void main() async {
@@ -40,8 +43,8 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/curation', page: () => const JobMainPage()),
         GetPage(name: '/certificateInfoPage', page: () => CertificateInfoPage()),  // 자격증 정보 페이지 등록
         GetPage(name: '/test_jobs_screen', page: () => TestJobsScreen()),  // 시험 일정 페이지 등록
-        // GetPage(name: '/notice', page: () => Notice()),
-        // GetPage(name: '/faq', page: () => FAQ()),
+        GetPage(name: '/notice_screen', page: () => NoticeScreen()),
+        GetPage(name: '/faq_screen', page: () => FaqScreen()),
         GetPage(name: '/terms', page: () => TermsScreen()),
 
         // 마이페이지 관련 라우팅
