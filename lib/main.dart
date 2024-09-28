@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';  // dotenv 패키지 임포
 import 'core/widgets/header.dart';  // Header 파일 가져오기
 import 'core/widgets/footer.dart';  // Footer 파일 가져오기
 import 'package:get/get.dart';  // GetX를 사용한 라우팅 처리
-import 'core/widgets/sidebar_}layout.dart';
+import 'core/widgets/sidebar_layout.dart';  // SidebarLayout 파일 가져오기
 import 'features/employment/screens/job_main_page.dart';
 import 'features/certificate/screens/certificateInfoPage.dart';  // 자격증 정보 페이지 임포트
 import 'features/certificate/screens/test_jobs_screen.dart';  // 시험 일정 페이지 임포트
@@ -11,6 +11,12 @@ import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
 import 'features/mypage/screens/home_screen.dart';
 import 'features/term/screens/terms_screen.dart';
+import 'features/mypage/screens/profile_page.dart';
+import 'features/mypage/screens/resume_page.dart';
+import 'features/mypage/screens/applications_page.dart';
+import 'features/mypage/screens/certificates_page.dart';
+import 'features/mypage/screens/withdrawal_page.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,18 +43,19 @@ class MainApp extends StatelessWidget {
         // GetPage(name: '/notice', page: () => Notice()),
         // GetPage(name: '/faq', page: () => FAQ()),
         GetPage(name: '/terms', page: () => TermsScreen()),
+
         // 마이페이지 관련 라우팅
         GetPage(name: '/home_screen', page: () => SidebarLayout(child: HomeScreen())),
-        // GetPage(name: '/mypage/screen/profile_page', page: () => SidebarLayout(child: ProfilePage())),
-        // GetPage(name: '/mypage/screen/resume_page', page: () => SidebarLayout(child: ResumePage())),
-        // GetPage(name: '/mypage/screens/applications_page', page: () => SidebarLayout(child: ApplicationsPage())),
-        // GetPage(name: '/mypage/screens/scrap_page', page: () => SidebarLayout(child: ScrapPage())),
-        // GetPage(name: '/mypage/screens/certificates_page', page: () => SidebarLayout(child: CertificatesPage())),
-        // GetPage(name: '/mypage/screens/withdrawal_page', page: () => SidebarLayout(child: WithdrawalPage())),
+        GetPage(name: '/profile_page', page: () => SidebarLayout(child: ProfilePage())),
+        GetPage(name: '/resume_page', page: () => SidebarLayout(child: ResumePage())),
+        GetPage(name: '/applications_page', page: () => SidebarLayout(child: ApplicationPage())),
+        GetPage(name: '/certificates_page', page: () => SidebarLayout(child: CertificatesPage())),
+        GetPage(name: '/withdrawal_page', page: () => SidebarLayout(child: WithdrawalPage())),
       ],
     );
   }
 }
+
 // MenuPage 클래스 수정 (각 버튼이 하나의 페이지로 이동하도록)
 class MenuPage extends StatelessWidget {
   @override
