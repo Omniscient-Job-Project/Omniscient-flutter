@@ -20,12 +20,12 @@ class JobMainPage extends StatefulWidget {
 
 class _JobMainPageState extends State<JobMainPage> {
   final JobRepository _jobRepository = JobRepository(ApiJobService());
-
-  final EmployRepository _employmentRepository = EmployRepository(ApiEmployService()); // EmploymentRepository 추가
+  final EmployRepository _employmentRepository = EmployRepository(ApiEmployService());
 
   String selectedCategory = 'home'; // 초기 카테고리를 'home'으로 설정
   List<Job> jobs = [];
   List<Employment> employments = []; // Employment 리스트 추가
+  List<Employment> filteredEmployments = []; // 필터링된 Employment 리스트 추가
   int currentPage = 1;
   int itemsPerPage = 16;
 
@@ -49,9 +49,10 @@ class _JobMainPageState extends State<JobMainPage> {
 
   Future<void> loadEmployments() async {
     try {
-      List<Employment> fetchedEmployments = await _employmentRepository.getEmployments(numOfRows: 100); // 고용 정보 데이터 로드
+      List<Employment> fetchedEmployments = await _employmentRepository.getEmployments(numOfRows: 100);
       setState(() {
         employments = fetchedEmployments;
+        filteredEmployments = employments; // 초기에는 모든 고용 정보를 표시
       });
     } catch (e) {
       print('Error loading employment data: $e');
@@ -60,7 +61,6 @@ class _JobMainPageState extends State<JobMainPage> {
 
   Future<void> searchJobs(String query) async {
     try {
-      // 검색 기능 (수정 필요)
       final searchResults = await _jobRepository.getJobs(numOfRows: 100);
       setState(() {
         jobs = searchResults;
@@ -68,6 +68,31 @@ class _JobMainPageState extends State<JobMainPage> {
       });
     } catch (e) {
       print('Error searching jobs: $e');
+    }
+  }
+
+  void filterEmployments(String category) {
+    if (category == 'home') {
+      setState(() {
+        filteredEmployments = employments; // 모든 고용 정보를 보여줌
+      });
+    } else {
+      setState(() {
+        filteredEmployments = employments.where((employment) {
+          switch (category) {
+            case 'womenJobs':
+              return employment.divNm == '여성 일자리';
+            case 'studentJobs':
+              return employment.divNm == '대학생 일자리';
+            case 'elderlyJobs':
+              return employment.divNm == '노인일자리';
+            case 'employment':
+              return employment.divNm == '고용센터';
+            default:
+              return true; // 예외 처리 (모든 항목 반환)
+          }
+        }).toList();
+      });
     }
   }
 
@@ -93,8 +118,7 @@ class _JobMainPageState extends State<JobMainPage> {
                       setState(() {
                         selectedCategory = category;
                       });
-                      loadJobs(); // 카테고리 변경 시 Job 데이터를 로드
-                      loadEmployments(); // 카테고리 변경 시 Employment 데이터 로드
+                      filterEmployments(category); // 카테고리 변경 시 필터링
                     },
                   ),
                   const SizedBox(height: 20),
@@ -167,10 +191,10 @@ class _JobMainPageState extends State<JobMainPage> {
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
       ),
-      itemCount: employments.length, // Employment 리스트의 개수
+      itemCount: filteredEmployments.length, // 필터링된 Employment 리스트의 개수
       itemBuilder: (context, index) {
-        if (index >= employments.length) return const SizedBox.shrink();
-        return EmploymentCard(employment: employments[index]); // EmploymentCard 사용
+        if (index >= filteredEmployments.length) return const SizedBox.shrink();
+        return EmploymentCard(employment: filteredEmployments[index]); // EmploymentCard 사용
       },
     );
   }
@@ -179,12 +203,12 @@ class _JobMainPageState extends State<JobMainPage> {
     if (selectedCategory == 'home') {
       return jobs.length; // jobs 리스트의 개수
     } else {
-      return employments.length; // employments 리스트의 개수
+      return filteredEmployments.length; // 필터링된 employments 리스트의 개수
     }
   }
 
   Widget buildPagination() {
-    int totalPages = (selectedCategory == 'home' ? jobs.length : employments.length) ~/ itemsPerPage + 1;
+    int totalPages = (selectedCategory == 'home' ? jobs.length : filteredEmployments.length) ~/ itemsPerPage + 1;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
