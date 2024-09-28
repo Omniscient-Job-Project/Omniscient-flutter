@@ -10,14 +10,12 @@ import 'features/certificate/screens/test_jobs_screen.dart';  // 시험 일정 �
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
 import 'features/mypage/screens/home_screen.dart';
+import 'features/term/screens/terms_screen.dart';
 import 'features/mypage/screens/profile_page.dart';
 import 'features/mypage/screens/resume_page.dart';
 import 'features/mypage/screens/applications_page.dart';
 import 'features/mypage/screens/certificates_page.dart';
 import 'features/mypage/screens/withdrawal_page.dart';
-
-
-
 
 
 void main() async {
@@ -42,6 +40,9 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/curation', page: () => const JobMainPage()),
         GetPage(name: '/certificateInfoPage', page: () => CertificateInfoPage()),  // 자격증 정보 페이지 등록
         GetPage(name: '/test_jobs_screen', page: () => TestJobsScreen()),  // 시험 일정 페이지 등록
+        // GetPage(name: '/notice', page: () => Notice()),
+        // GetPage(name: '/faq', page: () => FAQ()),
+        GetPage(name: '/terms', page: () => TermsScreen()),
 
         // 마이페이지 관련 라우팅
         GetPage(name: '/home_screen', page: () => SidebarLayout(child: HomeScreen())),
@@ -50,11 +51,11 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/applications_page', page: () => SidebarLayout(child: ApplicationPage())),
         GetPage(name: '/certificates_page', page: () => SidebarLayout(child: CertificatesPage())),
         GetPage(name: '/withdrawal_page', page: () => SidebarLayout(child: WithdrawalPage())),
-
       ],
     );
   }
 }
+
 // MenuPage 클래스 수정 (각 버튼이 하나의 페이지로 이동하도록)
 class MenuPage extends StatelessWidget {
   @override
@@ -82,6 +83,12 @@ class MenuPage extends StatelessWidget {
                 Get.toNamed('/mypage/screens/home_screen'); // 마이페이지로 이동 (사이드바가 있는 페이지)
               },
               child: const Text('마이페이지로 이동'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.toNamed('/TermsScreen');  // TermsScreen으로 이동
+              },
+              child: const Text('이용 약관 페이지로 이동'),
             ),
           ],
         ),
