@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart' hide SearchBar;
-import 'package:omniscient/features/employment/models/job.dart';
-import 'package:omniscient/features/employment/repositories/job_repository.dart';
-import 'package:omniscient/features/employment/widgets/curation_index.dart';
-import 'package:omniscient/features/employment/widgets/job_card.dart';
-import 'package:omniscient/features/employment/widgets/search_bar.dart' as custom;
-import '../widgets/search_bar.dart';
-import 'package:omniscient/core/widgets/header.dart';
-import 'package:omniscient/features/employment/services/job_api_service.dart';
-
+import 'package:flutter/material.dart';
+import '../../../core/services/api_employ_service.dart';
+import '../../../core/widgets/header.dart';
+import '../models/job.dart';  // Job 모델을 사용
+import '../repositories/job_repository.dart';  // JobRepository로 변경
+import '../widgets/job_card.dart';  // JobCard 위젯 사용
+import '../widgets/search_bar.dart' as custom;
+import '../widgets/curation_index.dart';
 
 class JobMainPage extends StatefulWidget {
   const JobMainPage({Key? key}) : super(key: key);
@@ -17,52 +15,46 @@ class JobMainPage extends StatefulWidget {
 }
 
 class _JobMainPageState extends State<JobMainPage> {
-  final JobApiService _jobApiService = JobApiService();
-  final JobRepository _jobRepository = JobRepository();
-  String selectedCategory = 'home';
-  List<Job> jobs = [];
+  final JobRepository _jobRepository = JobRepository(ApiService()); // JobRepository를 사용
+  String selectedCategory = 'home';  // 초기 카테고리를 'home'으로 설정
+  List<Job> jobs = [];  // Employment 대신 Job 리스트로 변경
   int currentPage = 1;
   int itemsPerPage = 16;
 
   @override
   void initState() {
     super.initState();
-    loadJobs();
+    loadJobs();  // loadEmployments 대신 loadJobs로 변경
   }
 
   Future<void> loadJobs() async {
     try {
-      final fetchedJobs = await _jobApiService.fetchJobs();
+      List<Job> fetchedJobs = await _jobRepository.getJobs(numOfRows: 100);  // Job 데이터 불러오기
       setState(() {
         jobs = fetchedJobs;
       });
     } catch (e) {
-      print('Error loading jobs: $e');
-      // 여기에 사용자에게 오류를 표시하는 로직을 추가할 수 있습니다.
+      print('Error loading job data: $e');
     }
   }
 
-  void selectCategory(String category) {
-    setState(() {
-      selectedCategory = category;
-    });
-    loadJobs(); // 카테고리 변경 시 데이터 다시 로드
-  }
-
-
   Future<void> searchJobs(String query) async {
-    final searchResults = await _jobRepository.searchJobs(query);
-    setState(() {
-      jobs = searchResults;
-      currentPage = 1;
-    });
+    try {
+      final searchResults = await _jobRepository.getJobs(numOfRows: 100); // 검색 기능 (수정 필요)
+      setState(() {
+        jobs = searchResults;
+        currentPage = 1;
+      });
+    } catch (e) {
+      print('Error searching jobs: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
+        preferredSize: const Size.fromHeight(80.0),
         child: Header(),
       ),
       body: Container(
@@ -76,12 +68,17 @@ class _JobMainPageState extends State<JobMainPage> {
                 children: [
                   CurationIndex(
                     selectedCategory: selectedCategory,
-                    onCategorySelected: selectCategory,
+                    onCategorySelected: (category) {
+                      setState(() {
+                        selectedCategory = category;
+                      });
+                      loadJobs();  // 카테고리 변경 시 Job 데이터를 로드
+                    },
                   ),
                   const SizedBox(height: 20),
                   buildHeaderContainer(),
                   const SizedBox(height: 20),
-                  buildJobGrid(),
+                  buildJobGrid(),  // Employment 대신 Job 데이터를 표시
                   const SizedBox(height: 20),
                   buildPagination(),
                 ],
@@ -105,7 +102,7 @@ class _JobMainPageState extends State<JobMainPage> {
         ),
         Expanded(
           flex: 3,
-          child: SearchBar(onSearch: searchJobs),  // 위젯으로 사용
+          child: custom.SearchBar(onSearch: searchJobs), // SearchBar에서 검색 가능
         ),
       ],
     );
@@ -124,15 +121,14 @@ class _JobMainPageState extends State<JobMainPage> {
       itemCount: calculateItemCount(),
       itemBuilder: (context, index) {
         final jobIndex = (currentPage - 1) * itemsPerPage + index;
-        if (jobIndex >= jobs.length) return null;
-        return JobCard(job: jobs[jobIndex]);
+        if (jobIndex >= jobs.length) return const SizedBox.shrink();
+        return JobCard(job: jobs[jobIndex]);  // EmploymentCard 대신 JobCard 사용
       },
     );
   }
 
   int calculateItemCount() {
-    int remainingItems = jobs.length - (currentPage - 1) * itemsPerPage;
-    return remainingItems > itemsPerPage ? itemsPerPage : remainingItems;
+    return jobs.length;  // jobs 리스트의 개수
   }
 
   Widget buildPagination() {
@@ -167,11 +163,8 @@ class _JobMainPageState extends State<JobMainPage> {
         return '대학생 일자리';
       case 'elderlyJobs':
         return '노인 일자리';
-      case 'employment':
-        return '고용센터';
       default:
-        return '채용 정보';
+        return '채용 정보';  // 'home' 카테고리의 기본 제목
     }
   }
 }
-
