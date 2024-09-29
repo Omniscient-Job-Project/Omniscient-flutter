@@ -23,12 +23,23 @@ class _NoticeScreenState extends State<NoticeScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Column(
         children: [
           Header(), // 헤더 추가
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬하기 위해 추가
+            child: Text(
+              '공지사항',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.left, // 텍스트를 왼쪽 정렬
+            ),
+          ),
           Expanded(
             child: FutureBuilder<List<Notice>>(
               future: _notices,
@@ -49,9 +60,9 @@ class _NoticeScreenState extends State<NoticeScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: Center(
                         child: Container(
-                          width: screenWidth < 600 ? screenWidth * 0.95 : screenWidth * 0.8, // 작은 화면일 때는 95%, 큰 화면일 때는 80%
+                          width: screenWidth < 600 ? screenWidth * 0.95 : screenWidth * 0.8,
                           child: DataTable(
-                            columnSpacing: screenWidth * 0.05, // 열 간격 조정
+                            columnSpacing: screenWidth * 0.05,
                             columns: const [
                               DataColumn(label: Text('번호')),
                               DataColumn(label: Text('제목')),

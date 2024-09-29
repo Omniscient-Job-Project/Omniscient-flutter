@@ -13,6 +13,7 @@ import 'features/mypage/screens/home_screen.dart';
 import 'features/term/screens/terms_screen.dart';
 import 'features/mypage/screens/profile_page.dart';
 import 'features/mypage/screens/resume_page.dart';
+import 'features/mypage/screens/scrap_page.dart';
 import 'features/mypage/screens/applications_page.dart';
 import 'features/mypage/screens/certificates_page.dart';
 import 'features/mypage/screens/withdrawal_page.dart';
@@ -52,6 +53,7 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/profile_page', page: () => SidebarLayout(child: ProfilePage())),
         GetPage(name: '/resume_page', page: () => SidebarLayout(child: ResumePage())),
         GetPage(name: '/applications_page', page: () => SidebarLayout(child: ApplicationPage())),
+        GetPage(name: '/scrap_page', page: () => SidebarLayout(child: ScrapPage())),
         GetPage(name: '/certificates_page', page: () => SidebarLayout(child: CertificatesPage())),
         GetPage(name: '/withdrawal_page', page: () => SidebarLayout(child: WithdrawalPage())),
       ],

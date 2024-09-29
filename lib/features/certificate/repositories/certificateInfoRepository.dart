@@ -10,9 +10,13 @@ class CertificateInfoRepository {
     responseType: ResponseType.plain,
   ));
 
-  Future<List<CertificateInfo>> fetchCertificates(String grdCd) async {
+  Future<List<CertificateInfo>> fetchCertificates(String grdCd, int pageNo, int numOfRows) async {
     try {
-      final response = await _dio.get('/api/v1/gradejob?grdCd=$grdCd');
+      final response = await _dio.get('/api/v1/gradejob', queryParameters: {
+        'grdCd': grdCd,
+        'pageNo': pageNo,
+        'numOfRows': numOfRows,
+      });
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.data);

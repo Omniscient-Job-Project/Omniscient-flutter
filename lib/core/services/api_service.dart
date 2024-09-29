@@ -1,3 +1,4 @@
+// core/services/api_service.dart
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart'; // dotenv 패키지 임포트
@@ -9,35 +10,22 @@ class ApiService {
     responseType: ResponseType.plain,
   ));
 
-  Future<Response> getRequest(String endpoint) async {
-    try {
-      return await _dio.get(endpoint);
-    } catch (e) {
-      throw Exception('Failed to load data: $e');
-    }
-  }
-
-  Future<Response> postRequest(String endpoint, Map<String, dynamic> data) async {
-    try {
-      return await _dio.post(endpoint, data: data);
-    } catch (e) {
-      throw Exception('Failed to post data: $e');
-    }
-  }
-
-  // fetchTestJobs 메서드를 ApiService 클래스 내부로 이동
-  Future<List<TestJob>> fetchTestJobs({int numOfRows = 100}) async {
-    // 기본적으로 100개의 항목 요청
+  // fetchTestJobs 메서드
+  Future<List<TestJob>> fetchTestJobs({String? token, int numOfRows = 100}) async {
     try {
       final response = await _dio.get(
         '/api/v1/testjob',
         queryParameters: {
           'numOfRows': numOfRows,  // 한 번에 불러올 데이터 개수 설정
         },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token', // 토큰 포함
+          },
+        ),
       );
 
       if (response.statusCode == 200) {
-        // responseType이 ResponseType.plain이므로, response.data는 String 타입입니다.
         final Map<String, dynamic> data = jsonDecode(response.data);
 
         // API 응답 데이터 구조에 따라 접근 경로 수정
@@ -57,7 +45,7 @@ class ApiService {
 
         return testJobs;
       } else {
-        throw Exception('Failed to load test jobs');
+        throw Exception('Failed to load test jobs: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching test jobs: $e');

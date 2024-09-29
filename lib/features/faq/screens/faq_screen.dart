@@ -67,37 +67,50 @@ class _FaqScreenState extends State<FaqScreen> {
           Header(), // 헤더 추가
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Container(
-              width: screenWidth < 600 ? screenWidth * 0.95 : screenWidth * 0.8,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      '번호',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
+            child: Column(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬하기 위해 추가
+                  child: Text(
+                    'FAQ',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
+                    textAlign: TextAlign.left, // 텍스트를 왼쪽 정렬
                   ),
-                  Expanded(
-                    flex: 4,
-                    child: Text(
-                      '제목',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 16), // 간격 추가
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        '번호',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      '조회수',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
+                    Expanded(
+                      flex: 4,
+                      child: Text(
+                        '제목',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        '조회수',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -118,11 +131,8 @@ class _FaqScreenState extends State<FaqScreen> {
                   child: Center(
                     child: Container(
                       width: screenWidth < 600 ? screenWidth * 0.95 : screenWidth * 0.8, // 작은 화면일 때는 95%, 큰 화면일 때는 80%
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: faqs.length,
-                        itemBuilder: (context, index) {
+                      child: Column(
+                        children: List.generate(faqs.length, (index) {
                           final faq = faqs[index];
                           return Column(
                             children: [
@@ -160,7 +170,7 @@ class _FaqScreenState extends State<FaqScreen> {
                               Divider(),
                             ],
                           );
-                        },
+                        }),
                       ),
                     ),
                   ),
