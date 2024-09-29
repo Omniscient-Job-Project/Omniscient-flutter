@@ -1,5 +1,7 @@
-// features/certificate/screens/certificate_info_page.dart
+// features/certificate/pages/certificate_info_page.dart
 import 'package:flutter/material.dart';
+import '../../mypage/models/scrap_item.dart';
+import '../../mypage/repositories/scrap_repository.dart';
 import '/core/widgets/header.dart';  // Header 파일 가져오기
 import '/core/widgets/footer.dart';  // Footer 파일 가져오기
 import '../widgets/certificateInfoList.dart';  // CertificateInfoList 임포트
@@ -13,9 +15,12 @@ class CertificateInfoPage extends StatefulWidget {
 
 class _CertificateInfoPageState extends State<CertificateInfoPage> {
   final CertificateInfoRepository _repository = CertificateInfoRepository();
+  final ScrapRepository _scrapRepository = ScrapRepository();  // 스크랩 기능 추가
+
   List<CertificateInfo> _allCertificates = []; // 전체 자격증 정보
   List<CertificateInfo> _filteredCertificates = []; // 필터링된 자격증 정보
   List<CertificateInfo> _displayedCertificates = []; // 현재 페이지에 표시되는 자격증 정보
+  List<String> _favoriteCertificates = [];  // 즐겨찾기된 자격증 ID 리스트
 
   int _currentPage = 1;
   final int _itemsPerPage = 5;
@@ -29,7 +34,8 @@ class _CertificateInfoPageState extends State<CertificateInfoPage> {
   @override
   void initState() {
     super.initState();
-    _fetchCertificateInfo();
+    _fetchCertificateInfo();  // 자격증 정보 로드
+    _loadFavoriteCertificates();  // 즐겨찾기 상태 로드
   }
 
   @override
@@ -41,10 +47,10 @@ class _CertificateInfoPageState extends State<CertificateInfoPage> {
   // 모든 자격증 정보를 가져오고, 필터링 및 페이지네이션을 초기화
   void _fetchCertificateInfo() async {
     try {
-      List<CertificateInfo> certificates = await _repository.fetchCertificates(grdCd);
+      List<CertificateInfo> certificates = await _repository.fetchCertificates(grdCd, _currentPage, _itemsPerPage);
       setState(() {
         _allCertificates = certificates;
-        _applyFilterAndPagination();
+        _applyFilterAndPagination();  // 필터링 및 페이지네이션 적용
       });
     } catch (e) {
       // 에러 처리 (예: 스낵바 또는 오류 위젯 표시)
@@ -52,6 +58,50 @@ class _CertificateInfoPageState extends State<CertificateInfoPage> {
         SnackBar(content: Text('자격증 데이터를 불러오는 중 오류 발생: $e')),
       );
     }
+  }
+
+  // 즐겨찾기 항목 로드
+  void _loadFavoriteCertificates() async {
+    List<ScrapItem> scraps = await _scrapRepository.loadScrapItems();
+    setState(() {
+      _favoriteCertificates = scraps
+          .where((scrap) => scrap.jmNm != null)
+          .map((scrap) => scrap.jmNm!)
+          .toList();
+    });
+  }
+
+  // 즐겨찾기 상태 토글
+  void _toggleFavorite(CertificateInfo certificate) async {
+    setState(() {
+      if (_favoriteCertificates.contains(certificate.jmNm)) {
+        _favoriteCertificates.remove(certificate.jmNm);
+        _scrapRepository.removeScrapItemById(certificate.jmNm!);
+      } else {
+        _favoriteCertificates.add(certificate.jmNm!);
+        _scrapRepository.addScrapItem(ScrapItem(
+          jmNm: certificate.jmNm,
+          instiNm: certificate.instiNm,
+          grdNm: certificate.grdNm,
+          preyyAcquQualIncRate: certificate.preyyAcquQualIncRate != null
+              ? int.tryParse(certificate.preyyAcquQualIncRate.toString())
+              : null,
+          preyyQualAcquCnt: certificate.preyyQualAcquCnt != null
+              ? int.tryParse(certificate.preyyQualAcquCnt.toString())
+              : null,
+          qualAcquCnt: certificate.qualAcquCnt != null
+              ? int.tryParse(certificate.qualAcquCnt.toString())
+              : null,
+          statisYy: certificate.statisYy?.toString(),
+          sumYy: certificate.sumYy?.toString(),
+          instNm: null,
+          contctNm: null,
+          refineLotnoAddr: null,
+          refineZipNo: null,
+          regionNm: null,
+        ));
+      }
+    });
   }
 
   // 검색어에 따라 데이터를 필터링하고, 페이지네이션을 적용
@@ -98,7 +148,7 @@ class _CertificateInfoPageState extends State<CertificateInfoPage> {
   void _changePage(int page) {
     setState(() {
       _currentPage = page;
-      _applyFilterAndPagination();
+      _fetchCertificateInfo(); // 페이지 변경 시 데이터 새로 고침
     });
   }
 
@@ -142,7 +192,13 @@ class _CertificateInfoPageState extends State<CertificateInfoPage> {
                   ? Center(child: Text('자격증 정보를 찾을 수 없습니다.'))
                   : Column(
                 children: [
-                  Expanded(child: CertificateInfoList(certificates: _displayedCertificates)),
+                  Expanded(
+                    child: CertificateInfoList(
+                      certificates: _displayedCertificates,
+                      favoriteCertificates: _favoriteCertificates, // 즐겨찾기 상태 전달
+                      onFavoriteToggle: _toggleFavorite, // 즐겨찾기 토글 전달
+                    ),
+                  ),
                   SizedBox(height: 16),
                   _buildPagination(totalPages),
                 ],

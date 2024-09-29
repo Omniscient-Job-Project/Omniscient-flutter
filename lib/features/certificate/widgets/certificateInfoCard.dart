@@ -1,4 +1,3 @@
-// features/certificate/widgets/certificate_info_card.dart
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../models/certificateInfo.dart';
@@ -6,8 +5,15 @@ import 'package:intl/intl.dart';  // intl 패키지 임포트
 
 class CertificateInfoCard extends StatelessWidget {
   final CertificateInfo certificate;
+  final bool isFavorited;
+  final VoidCallback onFavoriteToggle;  // 즐겨찾기 토글 기능 추가
 
-  const CertificateInfoCard({Key? key, required this.certificate}) : super(key: key);
+  const CertificateInfoCard({
+    Key? key,
+    required this.certificate,
+    required this.isFavorited,  // 즐겨찾기 상태
+    required this.onFavoriteToggle,  // 즐겨찾기 토글 기능
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +30,7 @@ class CertificateInfoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 자격증 이름
+            // 제목 부분: 자격증 이름 + 즐겨찾기 아이콘
             Row(
               children: [
                 FaIcon(FontAwesomeIcons.certificate, color: Colors.green),
@@ -35,95 +41,61 @@ class CertificateInfoCard extends StatelessWidget {
                     style: titleStyle,
                   ),
                 ),
+                // 즐겨찾기 아이콘
+                IconButton(
+                  icon: Icon(
+                    isFavorited ? Icons.star : Icons.star_border, // 즐겨찾기 여부에 따른 아이콘 변경
+                    color: isFavorited ? Colors.yellow : Colors.grey,
+                  ),
+                  onPressed: onFavoriteToggle,  // 즐겨찾기 버튼 클릭 시 실행
+                ),
               ],
             ),
             SizedBox(height: 8),
 
-            // 기관 이름
-            Row(
-              children: [
-                FaIcon(FontAwesomeIcons.building, color: Colors.blue),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text('기관: ${certificate.instiNm}', style: contentStyle),
-                ),
-              ],
-            ),
+            // 기관 이름 표시
+            if (certificate.instiNm != null)
+              _buildInfoRow(FontAwesomeIcons.building, '기관: ${certificate.instiNm}', Colors.blue, contentStyle),
 
-            // 등급
-            Row(
-              children: [
-                FaIcon(FontAwesomeIcons.trophy, color: Colors.orange),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text('등급: ${certificate.grdNm}', style: contentStyle),
-                ),
-              ],
-            ),
+            // 등급 표시
+            if (certificate.grdNm != null)
+              _buildInfoRow(FontAwesomeIcons.trophy, '등급: ${certificate.grdNm}', Colors.orange, contentStyle),
 
-            // 자격증 취득률
-            Row(
-              children: [
-                FaIcon(FontAwesomeIcons.chartLine, color: Colors.purple),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text('자격증 취득률: ${certificate.preyyAcquQualIncRate.toStringAsFixed(2)}%', style: contentStyle),
-                ),
-              ],
-            ),
+            // 자격증 취득률 표시
+            if (certificate.preyyAcquQualIncRate != null)
+              _buildInfoRow(FontAwesomeIcons.chartLine, '자격증 취득률: ${certificate.preyyAcquQualIncRate!.toStringAsFixed(2)}%', Colors.purple, contentStyle),
 
-            // 전년도 자격증 취득 수
-            Row(
-              children: [
-                FaIcon(FontAwesomeIcons.chartBar, color: Colors.indigo),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    '전년도 자격증 취득 수: ${numberFormat.format(certificate.preyyQualAcquCnt)}',
-                    style: contentStyle,
-                  ),
-                ),
-              ],
-            ),
+            // 전년도 자격증 취득 수 표시
+            if (certificate.preyyQualAcquCnt != null)
+              _buildInfoRow(FontAwesomeIcons.chartBar, '전년도 자격증 취득 수: ${numberFormat.format(certificate.preyyQualAcquCnt)}', Colors.indigo, contentStyle),
 
-            // 총 자격증 취득 수
-            Row(
-              children: [
-                FaIcon(FontAwesomeIcons.chartPie, color: Colors.red),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    '총 자격증 취득 수: ${numberFormat.format(certificate.qualAcquCnt)}',
-                    style: contentStyle,
-                  ),
-                ),
-              ],
-            ),
+            // 총 자격증 취득 수 표시
+            if (certificate.qualAcquCnt != null)
+              _buildInfoRow(FontAwesomeIcons.chartPie, '총 자격증 취득 수: ${numberFormat.format(certificate.qualAcquCnt)}', Colors.red, contentStyle),
 
-            // 통계 연도
-            Row(
-              children: [
-                FaIcon(FontAwesomeIcons.calendarAlt, color: Colors.teal),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text('통계 연도: ${certificate.statisYy}', style: contentStyle),
-                ),
-              ],
-            ),
+            // 통계 연도 표시
+            if (certificate.statisYy != null)
+              _buildInfoRow(FontAwesomeIcons.calendarAlt, '통계 연도: ${certificate.statisYy}', Colors.teal, contentStyle),
 
-            // 합계 연도
-            Row(
-              children: [
-                FaIcon(FontAwesomeIcons.calendarCheck, color: Colors.lightGreen),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text('합계 연도: ${certificate.sumYy}', style: contentStyle),
-                ),
-              ],
-            ),
+            // 합계 연도 표시
+            if (certificate.sumYy != null)
+              _buildInfoRow(FontAwesomeIcons.calendarCheck, '합계 연도: ${certificate.sumYy}', Colors.lightGreen, contentStyle),
           ],
         ),
       ),
+    );
+  }
+
+  // 정보 행을 생성하는 헬퍼 함수
+  Widget _buildInfoRow(IconData icon, String text, Color color, TextStyle style) {
+    return Row(
+      children: [
+        FaIcon(icon, color: color),
+        SizedBox(width: 8),
+        Expanded(
+          child: Text(text, style: style),
+        ),
+      ],
     );
   }
 }
