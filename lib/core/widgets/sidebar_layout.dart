@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../features/mypage/widgets/userprofile.dart';
 import 'header.dart';
 import 'footer.dart';
 
