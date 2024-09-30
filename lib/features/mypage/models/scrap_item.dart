@@ -1,22 +1,22 @@
 class ScrapItem {
-  final String? jobId;
-  final String? jobInfoTitle;
-  final String? jobCompanyName;
-  final String? jobLocation;
-  final String? jobCareerCondition;
-  final String? jmNm;
-  final String? instiNm;
-  final String? grdNm;
-  final int? preyyAcquQualIncRate;
-  final int? preyyQualAcquCnt;
-  final int? qualAcquCnt;
-  final String? statisYy;
-  final String? sumYy;  // sumYy 필드 추가
-  final String? instNm;
-  final String? contctNm;
-  final String? refineLotnoAddr;
-  final String? refineZipNo;
-  final String? regionNm;
+  final String? jobId; // Job ID
+  final String? jobInfoTitle; // Job title
+  final String? jobCompanyName; // Company name for the job
+  final String? jobLocation; // Job location
+  final String? jobCareerCondition; // Career condition for the job
+  final String? jmNm; // Job name for employment
+  final String? instiNm; // Institution name for employment
+  final String? grdNm; // Grade name for employment
+  final int? preyyAcquQualIncRate; // Qualification acquisition rate for employment
+  final int? preyyQualAcquCnt; // Qualification count for previous year
+  final int? qualAcquCnt; // Total qualification count
+  final String? statisYy; // Statistical year
+  final String? sumYy; // Sum year
+  final String? instNm; // Institution name (general)
+  final String? contctNm; // Contact name (general)
+  final String? refineLotnoAddr; // Refined lot number address
+  final String? refineZipNo; // Refined zip number
+  final String? regionNm; // Region name
 
   ScrapItem({
     this.jobId,
@@ -31,7 +31,7 @@ class ScrapItem {
     this.preyyQualAcquCnt,
     this.qualAcquCnt,
     this.statisYy,
-    this.sumYy,  // sumYy 필드 추가
+    this.sumYy,
     this.instNm,
     this.contctNm,
     this.refineLotnoAddr,
@@ -53,7 +53,7 @@ class ScrapItem {
       preyyQualAcquCnt: json['preyyQualAcquCnt'],
       qualAcquCnt: json['qualAcquCnt'],
       statisYy: json['statisYy'],
-      sumYy: json['sumYy'],  // sumYy 추가
+      sumYy: json['sumYy'],
       instNm: json['instNm'],
       contctNm: json['contctNm'],
       refineLotnoAddr: json['refineLotnoAddr'],
@@ -76,7 +76,7 @@ class ScrapItem {
       'preyyQualAcquCnt': preyyQualAcquCnt,
       'qualAcquCnt': qualAcquCnt,
       'statisYy': statisYy,
-      'sumYy': sumYy,  // sumYy 추가
+      'sumYy': sumYy,
       'instNm': instNm,
       'contctNm': contctNm,
       'refineLotnoAddr': refineLotnoAddr,

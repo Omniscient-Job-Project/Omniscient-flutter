@@ -8,7 +8,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  // 임시로 사용할 기본 프로필 데이터
   final UserProfile profile = UserProfile(
     name: '홍길동',
     jobTitle: '소프트웨어 엔지니어',
@@ -41,8 +40,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   imageUrl: profile.profileImages.isNotEmpty
                       ? profile.profileImages[0]
                       : 'https://via.placeholder.com/150',
-                  width: 150,
-                  height: 150, onImageClick: () {  },
+                  width: 120,
+                  height: 120,
+                  onImageClick: () {},
                 ),
                 SizedBox(width: 24),
                 // 프로필 정보
@@ -68,12 +68,12 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Text(
                   '자격증',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 ListView.builder(
-                  shrinkWrap: true, // ListView가 Column 안에서 작동하도록 설정
-                  physics: NeverScrollableScrollPhysics(), // 스크롤은 부모에서 처리
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: profile.certificates.length,
                   itemBuilder: (context, index) {
                     return ListTile(
@@ -97,11 +97,15 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Text(
-            '$title: ',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Flexible(
+            flex: 2,
+            child: Text(
+              '$title: ',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ),
-          Expanded(
+          Flexible(
+            flex: 3,
             child: Text(
               value,
               style: TextStyle(fontSize: 16),
