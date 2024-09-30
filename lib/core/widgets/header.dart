@@ -99,8 +99,8 @@ class _HeaderState extends State<Header> {
                             _buildSubMenuItem(context, '이력서 관리', '/resume_page'),
                             _buildSubMenuItem(context, '지원 현황', '/applications_page'),
                             _buildSubMenuItem(context, '스크랩', '/scrap_page'),
-                            _buildSubMenuItem(context, '자격증 관리', '/certificates_page'), // 자격증 관리 항목 추가
-                            _buildSubMenuItem(context, '회원 탈퇴', '/withdrawal_page'), // 자격증 관리 항목 추가
+                            _buildSubMenuItem(context, '자격증 관리', '/certificates_page'), 
+                            _buildSubMenuItem(context, '회원 탈퇴', '/withdrawal_page'), 
                           ],
 
                           _buildMenuItem(context, '공지사항', '/notice_screen'),
