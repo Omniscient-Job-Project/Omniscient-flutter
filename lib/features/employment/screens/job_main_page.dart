@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../core/services/api_employ_service.dart';
 import '../../../core/services/api_job_service.dart';
 import '../../../core/widgets/header.dart';
+import '../../mypage/models/scrap_item.dart';
+import '../../mypage/repositories/scrap_repository.dart';
 import '../models/job.dart'; // Job 모델 사용
 import '../models/employment.dart'; // Employment 모델 추가
 import '../repositories/employ_repository.dart';
@@ -21,11 +23,13 @@ class JobMainPage extends StatefulWidget {
 class _JobMainPageState extends State<JobMainPage> {
   final JobRepository _jobRepository = JobRepository(ApiJobService());
   final EmployRepository _employmentRepository = EmployRepository(ApiEmployService());
+  final ScrapRepository _scrapRepository = ScrapRepository(); // ScrapRepository 추가
 
   String selectedCategory = 'home'; // 초기 카테고리를 'home'으로 설정
   List<Job> jobs = [];
   List<Employment> employments = []; // Employment 리스트 추가
   List<Employment> filteredEmployments = []; // 필터링된 Employment 리스트 추가
+  Set<String> favoriteJobs = {}; // 즐겨찾기 상태 저장을 위한 Set
   int currentPage = 1;
   int itemsPerPage = 16;
 
@@ -59,9 +63,13 @@ class _JobMainPageState extends State<JobMainPage> {
     }
   }
 
+  // 검색어를 바탕으로 Job 데이터를 필터링
   Future<void> searchJobs(String query) async {
     try {
-      final searchResults = await _jobRepository.getJobs(numOfRows: 100);
+      List<Job> searchResults = jobs.where((job) {
+        return job.infoTitle.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+
       setState(() {
         jobs = searchResults;
         currentPage = 1;
@@ -71,13 +79,12 @@ class _JobMainPageState extends State<JobMainPage> {
     }
   }
 
+  // 선택된 카테고리에 따라 Employment 필터링
   void filterEmployments(String category) {
-    if (category == 'home') {
-      setState(() {
-        filteredEmployments = employments; // 모든 고용 정보를 보여줌
-      });
-    } else {
-      setState(() {
+    setState(() {
+      if (category == 'home') {
+        filteredEmployments = employments; // 모든 고용 정보 표시
+      } else {
         filteredEmployments = employments.where((employment) {
           switch (category) {
             case 'womenJobs':
@@ -85,15 +92,36 @@ class _JobMainPageState extends State<JobMainPage> {
             case 'studentJobs':
               return employment.divNm == '대학생 일자리';
             case 'elderlyJobs':
-              return employment.divNm == '노인일자리';
+              return employment.divNm == '노인 일자리';
             case 'employment':
               return employment.divNm == '고용센터';
             default:
-              return true; // 예외 처리 (모든 항목 반환)
+              return true;
           }
         }).toList();
-      });
-    }
+      }
+    });
+  }
+
+  // 즐겨찾기 상태 업데이트 및 ScrapRepository에 저장
+  void toggleFavorite(dynamic item) {
+    String itemId = item is Job ? item.infoTitle : item.instNm;
+
+    setState(() {
+      if (favoriteJobs.contains(itemId)) {
+        favoriteJobs.remove(itemId);
+      } else {
+        favoriteJobs.add(itemId);
+        ScrapItem scrapItem = ScrapItem(
+          jobId: item is Job ? item.infoTitle : null, // job id 대신 title 사용
+          jobInfoTitle: item is Job ? item.infoTitle : null,
+          jobCompanyName: item is Job ? item.companyName : null,
+          jobLocation: item is Job ? item.location : null,
+          jmNm: item is Employment ? item.instNm : null,
+        );
+        _scrapRepository.addScrapItem(scrapItem); // 스크랩 저장
+      }
+    });
   }
 
   @override
@@ -155,14 +183,6 @@ class _JobMainPageState extends State<JobMainPage> {
   }
 
   Widget buildJobGrid() {
-    if (selectedCategory == 'home') {
-      return buildJobCardGrid();
-    } else {
-      return buildEmploymentCardGrid();
-    }
-  }
-
-  Widget buildJobCardGrid() {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -176,39 +196,22 @@ class _JobMainPageState extends State<JobMainPage> {
       itemBuilder: (context, index) {
         final jobIndex = (currentPage - 1) * itemsPerPage + index;
         if (jobIndex >= jobs.length) return const SizedBox.shrink();
-        return JobCard(job: jobs[jobIndex]); // JobCard 사용
-      },
-    );
-  }
-
-  Widget buildEmploymentCardGrid() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.75,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-      ),
-      itemCount: filteredEmployments.length, // 필터링된 Employment 리스트의 개수
-      itemBuilder: (context, index) {
-        if (index >= filteredEmployments.length) return const SizedBox.shrink();
-        return EmploymentCard(employment: filteredEmployments[index]); // EmploymentCard 사용
+        bool isFavorite = favoriteJobs.contains(jobs[jobIndex].infoTitle);
+        return JobCard(
+          job: jobs[jobIndex],
+          onFavorite: () => toggleFavorite(jobs[jobIndex]),
+          isFavorite: isFavorite, // 즐겨찾기 상태 전달
+        );
       },
     );
   }
 
   int calculateItemCount() {
-    if (selectedCategory == 'home') {
-      return jobs.length; // jobs 리스트의 개수
-    } else {
-      return filteredEmployments.length; // 필터링된 employments 리스트의 개수
-    }
+    return jobs.length;
   }
 
   Widget buildPagination() {
-    int totalPages = (selectedCategory == 'home' ? jobs.length : filteredEmployments.length) ~/ itemsPerPage + 1;
+    int totalPages = jobs.length ~/ itemsPerPage + 1;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -242,7 +245,7 @@ class _JobMainPageState extends State<JobMainPage> {
       case 'employment':
         return '고용센터';
       default:
-        return '채용 정보'; // 'home' 카테고리의 기본 제목
+        return '채용 정보';
     }
   }
 }
