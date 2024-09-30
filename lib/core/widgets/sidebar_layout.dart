@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../features/mypage/widgets/userprofile.dart';
 import 'header.dart';
 import 'footer.dart';
-import '../../features/mypage/widgets/sidebar.dart';
 
 class SidebarLayout extends StatelessWidget {
   final Widget child;
@@ -16,19 +16,8 @@ class SidebarLayout extends StatelessWidget {
         preferredSize: const Size.fromHeight(80.0),
         child: Header(), // Header 추가
       ),
-      body: Row(
-        children: [
-          // 사이드바 영역
-          Container(
-            width: 250,
-            child: Sidebar(onItemSelected: (String page) {
-              Get.toNamed(page); // 서브 페이지로 이동
-            }),
-          ),
-          // 메인 콘텐츠 영역
-          Expanded(child: child),
-        ],
-      ),
+      // Row와 사이드바를 제거하고 child가 전체 화면을 차지하도록 변경
+      body: child,
       bottomNavigationBar: Footer(), // Footer 추가
     );
   }

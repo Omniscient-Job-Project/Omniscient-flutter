@@ -24,34 +24,37 @@ class WithdrawalPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('회원 탈퇴'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              '정말로 회원 탈퇴를 하시겠습니까?',
-              style: TextStyle(fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => confirmWithdrawal(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      body: Center( // Center 위젯으로 감싸기
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Column의 최소 크기 사용
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                '정말로 회원 탈퇴를 하시겠습니까?',
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
               ),
-              child: Text('탈퇴하기'),
-            ),
-            SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/myHome');
-              },
-              child: Text('취소'),
-            ),
-          ],
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => confirmWithdrawal(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                ),
+                child: Text('탈퇴하기'),
+              ),
+              SizedBox(height: 10),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/myHome');
+                },
+                child: Text('취소'),
+              ),
+            ],
+          ),
         ),
       ),
     );
