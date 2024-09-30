@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import '../../../core/services/api_employ_service.dart';
 import '../../../core/services/api_job_service.dart';
 import '../models/job.dart';
 

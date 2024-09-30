@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // 환경 변수 사용
 import 'package:omniscient/features/employment/models/job.dart';
 
 class JobApiService {
-  static const String baseUrl = 'http://10.0.2.2:8080'; // 로컬 개발 서버 URL
+  // 환경 변수에서 API_URL을 가져옴, 없으면 기본 값으로 로컬 서버 URL 사용
+  static final String baseUrl = dotenv.env['API_URL'] ?? 'http://default.url';
   static const int timeoutSeconds = 30;
 
   // 전체 일자리 정보 조회
