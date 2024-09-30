@@ -4,6 +4,7 @@ import 'core/widgets/header.dart';  // Header 파일 가져오기
 import 'core/widgets/footer.dart';  // Footer 파일 가져오기
 import 'package:get/get.dart';  // GetX를 사용한 라우팅 처리
 import 'core/widgets/sidebar_layout.dart';  // SidebarLayout 파일 가져오기
+import 'features/board/widgets/board_list_page.dart';
 import 'features/employment/screens/job_main_page.dart';
 import 'features/certificate/screens/certificateInfoPage.dart';  // 자격증 정보 페이지 임포트
 import 'features/certificate/screens/test_jobs_screen.dart';  // 시험 일정 페이지 임포트
@@ -43,6 +44,7 @@ class MainApp extends StatelessWidget {
         GetPage(name: '/', page: () => MainPage()),
         GetPage(name: '/curation', page: () => const JobMainPage()),
         GetPage(name: '/certificateInfoPage', page: () => CertificateInfoPage()),  // 자격증 정보 페이지 등록
+        GetPage(name: '/board', page: () => BoardListPage()),
         GetPage(name: '/test_jobs_screen', page: () => TestJobsScreen()),  // 시험 일정 페이지 등록
         GetPage(name: '/notice_screen', page: () => NoticeScreen()),
         GetPage(name: '/faq_screen', page: () => FaqScreen()),
