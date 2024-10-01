@@ -1,4 +1,3 @@
-// models/test_job.dart
 class TestJob {
   final String qualgbNm; // 시험명
   final String description; // 설명
@@ -43,5 +42,23 @@ class TestJob {
       pracExamEndDt: json['pracExamEndDt']?.toString() ?? '',
       pracPassDt: json['pracPassDt']?.toString() ?? '',
     );
+  }
+
+  // JSON 변환을 위한 toJson 메서드 추가
+  Map<String, dynamic> toJson() {
+    return {
+      'qualgbNm': qualgbNm,
+      'description': description,
+      'docRegStartDt': docRegStartDt,
+      'docRegEndDt': docRegEndDt,
+      'docExamStartDt': docExamStartDt,
+      'docExamEndDt': docExamEndDt,
+      'docPassDt': docPassDt,
+      'pracRegStartDt': pracRegStartDt,
+      'pracRegEndDt': pracRegEndDt,
+      'pracExamStartDt': pracExamStartDt,
+      'pracExamEndDt': pracExamEndDt,
+      'pracPassDt': pracPassDt,
+    };
   }
 }

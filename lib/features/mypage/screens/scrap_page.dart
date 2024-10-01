@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../certificate/models/test_job.dart';
-import '../../certificate/repositories/test_job_repository.dart';
+import '../../certificate/widgets/test_job_list.dart';
 import '../repositories/scrap_repository.dart';
 import '../models/scrap_item.dart';
 import '../widgets/scrap_item_card.dart';
@@ -13,7 +13,7 @@ class ScrapPage extends StatefulWidget {
 
 class _ScrapPageState extends State<ScrapPage> {
   List<ScrapItem> scrapItems = [];
-  List<TestJob> examJobs = []; // 시험 일정 저장 리스트
+  List<TestJob> favoriteTestJobs = []; // 즐겨찾기한 시험 일정 리스트
   late ScrapRepository scrapRepository;
   late ApiService _apiService; // 시험 일정 API 호출을 위한 서비스 인스턴스
 
@@ -23,7 +23,7 @@ class _ScrapPageState extends State<ScrapPage> {
     scrapRepository = ScrapRepository();
     _apiService = ApiService(); // ApiService 인스턴스 생성
     loadScrapItems();
-    loadExamJobs(); // 시험 일정 로드
+    loadFavoriteTestJobs(); // 즐겨찾기 시험 일정 로드
   }
 
   Future<void> loadScrapItems() async {
@@ -33,15 +33,21 @@ class _ScrapPageState extends State<ScrapPage> {
     });
   }
 
-  Future<void> loadExamJobs() async {
-    try {
-      List<TestJob> fetchedExamJobs = await _apiService.fetchTestJobs(); // API에서 시험 일정 가져옴
-      setState(() {
-        examJobs = fetchedExamJobs;
-      });
-    } catch (e) {
-      print('시험 일정 데이터를 불러오는 중 오류 발생: $e');
-    }
+  Future<void> loadFavoriteTestJobs() async {
+    // 스크랩된 즐겨찾기된 시험 일정 로드
+    List<TestJob> favoriteJobs = await scrapRepository.loadFavoriteTestJobs();
+    setState(() {
+      favoriteTestJobs = favoriteJobs;
+    });
+  }
+
+  // 즐겨찾기에서 시험 일정 삭제
+  void removeFavoriteJob(TestJob job) {
+    setState(() {
+      favoriteTestJobs.remove(job); // 즐겨찾기에서 삭제
+    });
+    // 스크랩 저장소에 저장
+    scrapRepository.saveFavoriteTestJobs(favoriteTestJobs);
   }
 
   void removeScrap(int index, String type) {
@@ -71,7 +77,7 @@ class _ScrapPageState extends State<ScrapPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            if (scrapItems.isEmpty && examJobs.isEmpty)
+            if (scrapItems.isEmpty && favoriteTestJobs.isEmpty)
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -87,9 +93,11 @@ class _ScrapPageState extends State<ScrapPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 순서: 자격증 정보 -> 시험 일정 -> 채용 정보
+                    // 자격증 정보
                     buildCategorySection('자격증 정보', getCertificateItems(), 'cert'),
-                    buildExamJobSection('시험 일정', examJobs), // 시험 일정 섹션
+                    // 즐겨찾기한 시험 일정
+                    buildFavoriteExamJobsSection('시험 일정', favoriteTestJobs),
+                    // 채용 정보
                     buildCategorySection('채용 정보', getJobItems(), 'job'),
                   ],
                 ),
@@ -101,7 +109,7 @@ class _ScrapPageState extends State<ScrapPage> {
     );
   }
 
-  // 각 카테고리 섹션을 빌드하는 함수 (자격증 및 채용 정보)
+  // 카테고리 섹션 빌드
   Widget buildCategorySection(String title, List<ScrapItem> items, String type) {
     if (items.isEmpty) {
       return SizedBox.shrink();
@@ -131,9 +139,9 @@ class _ScrapPageState extends State<ScrapPage> {
     );
   }
 
-  // 시험 일정 섹션을 빌드하는 함수
-  Widget buildExamJobSection(String title, List<TestJob> examJobs) {
-    if (examJobs.isEmpty) {
+  // 즐겨찾기한 시험 일정 섹션 빌드 (삭제 버튼 추가)
+  Widget buildFavoriteExamJobsSection(String title, List<TestJob> favoriteTestJobs) {
+    if (favoriteTestJobs.isEmpty) {
       return SizedBox.shrink();
     }
     return Column(
@@ -144,7 +152,26 @@ class _ScrapPageState extends State<ScrapPage> {
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         SizedBox(height: 10),
-        TestJobList(testJobs: examJobs), // 시험 일정 리스트 출력
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: favoriteTestJobs.length,
+          itemBuilder: (context, index) {
+            final job = favoriteTestJobs[index];
+            return Card(
+              elevation: 5,
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ListTile(
+                title: Text(job.qualgbNm),
+                subtitle: Text(job.description),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () => removeFavoriteJob(job),
+                ),
+              ),
+            );
+          },
+        ),
         SizedBox(height: 20),
       ],
     );
