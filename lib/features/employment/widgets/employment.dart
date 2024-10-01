@@ -5,8 +5,14 @@ import '../models/employment.dart';
 class EmploymentCard extends StatelessWidget {
   final Employment employment;
   final VoidCallback onFavorite; // 즐겨찾기 콜백
+  final bool isFavorite; // 즐겨찾기 상태 추가
 
-  const EmploymentCard({Key? key, required this.employment, required this.onFavorite}) : super(key: key);
+  const EmploymentCard({
+    Key? key,
+    required this.employment,
+    required this.onFavorite,
+    required this.isFavorite, // isFavorite 받기
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +28,10 @@ class EmploymentCard extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: IconButton(
-                icon: Icon(Icons.favorite_border),
+                icon: Icon(
+                  isFavorite ? Icons.favorite : Icons.favorite_border, // 즐겨찾기 상태에 따른 아이콘 변경
+                  color: isFavorite ? Colors.red : null, // 즐겨찾기 상태일 때 빨간색
+                ),
                 onPressed: onFavorite, // 콜백 실행
               ),
             ),
@@ -59,15 +68,16 @@ class EmploymentCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             if (employment.hmpgNm != null)
-              InkWell(
-                onTap: () {
-                  print('Open URL: ${employment.hmpgNm}'); // URL 열기 로직
-                },
-                child: Row(
-                  children: [
-                    const Icon(FontAwesomeIcons.link, color: Color(0xFF007BFF), size: 16),
-                    const SizedBox(width: 8),
-                  ],
+              Flexible( // Flexible로 감싸서 공간을 유연하게 사용하도록 수정
+                child: InkWell(
+                  onTap: () {
+                    print('Open URL: ${employment.hmpgNm}'); // URL 열기 로직
+                  },
+                  child: const Icon( // 아이콘만 표시되도록 수정
+                    FontAwesomeIcons.link,
+                    color: Color(0xFF007BFF),
+                    size: 16,
+                  ),
                 ),
               ),
           ],

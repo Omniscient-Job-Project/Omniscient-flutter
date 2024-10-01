@@ -19,19 +19,20 @@ class SidebarLayout extends StatelessWidget {
         preferredSize: const Size.fromHeight(80.0),
         child: Header(), // Header 추가
       ),
-      body: Row(
-        children: [
-          // 사이드바 영역
-          Container(
-            width: sidebarWidth, // Set sidebar width to 25% of screen width
-            child: Sidebar(onItemSelected: (String page) {
-              Get.toNamed(page); // 서브 페이지로 이동
-            }),
-          ),
-          // 메인 콘텐츠 영역
-          Expanded(child: child),
-        ],
-      ),
+      body: child,
+      // Row(
+      //   children: [
+      //     // 사이드바 영역
+      //     Container(
+      //       width: sidebarWidth, // Set sidebar width to 25% of screen width
+      //       child: Sidebar(onItemSelected: (String page) {
+      //         Get.toNamed(page); // 서브 페이지로 이동
+      //       }),
+      //     ),
+      //     // 메인 콘텐츠 영역
+      //     Expanded(child: child),
+      //   ],
+      // ),
       bottomNavigationBar: Footer(), // Footer 추가
     );
   }
