@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/services/api_employ_service.dart';
 import '../../../core/services/api_job_service.dart';
+import '../../../core/widgets/footer.dart';
 import '../../../core/widgets/header.dart';
 import '../../mypage/models/scrap_item.dart';
 import '../../mypage/repositories/scrap_repository.dart';
@@ -92,7 +93,7 @@ class _JobMainPageState extends State<JobMainPage> {
             case 'studentJobs':
               return employment.divNm == '대학생 일자리';
             case 'elderlyJobs':
-              return employment.divNm == '노인 일자리';
+              return employment.divNm == '노인일자리';
             case 'employment':
               return employment.divNm == '고용센터';
             default:
@@ -152,15 +153,17 @@ class _JobMainPageState extends State<JobMainPage> {
                   const SizedBox(height: 20),
                   buildHeaderContainer(),
                   const SizedBox(height: 20),
-                  buildJobGrid(), // Job 또는 Employment 데이터 표시
+                  buildContentGrid(), // Job 또는 Employment 데이터 표시
                   const SizedBox(height: 20),
                   buildPagination(),
+                  const SizedBox(height: 80), // 푸터 높이를 위한 여백 추가
                 ],
               ),
             ),
           ),
         ),
       ),
+      bottomNavigationBar: const Footer(), // 푸터 추가
     );
   }
 
@@ -182,6 +185,16 @@ class _JobMainPageState extends State<JobMainPage> {
     );
   }
 
+  // 선택된 카테고리에 따라 Job 또는 Employment 데이터를 보여주는 Grid
+  Widget buildContentGrid() {
+    if (selectedCategory == 'home') {
+      return buildJobGrid(); // 'home' 카테고리일 때는 Job 데이터를 보여줌
+    } else {
+      return buildEmploymentGrid(); // 그 외에는 Employment 데이터를 보여줌
+    }
+  }
+
+  // Job 데이터를 그리드로 표시
   Widget buildJobGrid() {
     return GridView.builder(
       shrinkWrap: true,
@@ -206,8 +219,32 @@ class _JobMainPageState extends State<JobMainPage> {
     );
   }
 
+  // Employment 데이터를 그리드로 표시
+  Widget buildEmploymentGrid() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.75,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+      ),
+      itemCount: filteredEmployments.length,
+      itemBuilder: (context, index) {
+        final employment = filteredEmployments[index];
+        bool isFavorite = favoriteJobs.contains(employment.instNm);
+        return EmploymentCard(
+          employment: employment,
+          onFavorite: () => toggleFavorite(employment),
+          isFavorite: isFavorite, // 즐겨찾기 상태 전달
+        );
+      },
+    );
+  }
+
   int calculateItemCount() {
-    return jobs.length;
+    return selectedCategory == 'home' ? jobs.length : filteredEmployments.length;
   }
 
   Widget buildPagination() {
