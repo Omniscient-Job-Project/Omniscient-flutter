@@ -1,3 +1,5 @@
+import '../../certificate/models/test_job.dart';
+
 class ScrapItem {
   final String? jobId; // Job ID
   final String? jobInfoTitle; // Job title
@@ -17,6 +19,7 @@ class ScrapItem {
   final String? refineLotnoAddr; // Refined lot number address
   final String? refineZipNo; // Refined zip number
   final String? regionNm; // Region name
+  final TestJob? testJob; // TestJob 정보 추가
 
   ScrapItem({
     this.jobId,
@@ -37,8 +40,10 @@ class ScrapItem {
     this.refineLotnoAddr,
     this.refineZipNo,
     this.regionNm,
+    this.testJob, // TestJob 필드 추가
   });
 
+  // JSON 데이터를 ScrapItem 객체로 변환
   factory ScrapItem.fromJson(Map<String, dynamic> json) {
     return ScrapItem(
       jobId: json['jobId'],
@@ -59,9 +64,11 @@ class ScrapItem {
       refineLotnoAddr: json['refineLotnoAddr'],
       refineZipNo: json['refineZipNo'],
       regionNm: json['regionNm'],
+      testJob: json['testJob'] != null ? TestJob.fromJson(json['testJob']) : null, // TestJob 정보 추가
     );
   }
 
+  // ScrapItem 객체를 JSON 데이터로 변환
   Map<String, dynamic> toJson() {
     return {
       'jobId': jobId,
@@ -82,6 +89,7 @@ class ScrapItem {
       'refineLotnoAddr': refineLotnoAddr,
       'refineZipNo': refineZipNo,
       'regionNm': regionNm,
+      'testJob': testJob?.toJson(), // TestJob 정보를 JSON 형식으로 변환
     };
   }
 }
